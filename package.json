@@ -2,7 +2,7 @@
   "name": "vue-cli-template-tdx-webpack",
   "version": "0.1.0",
   "license": "MIT",
-  "description": "A full-featured Webpack setup with hot-reload, lint-on-save, unit testing & css extraction.",
+  "description": "tdx vue-cli.",
   "scripts": {
     "docs": "cd docs && gitbook serve",
     "docs:deploy": "bash ./deploy-docs.sh"
