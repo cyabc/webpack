@@ -3,10 +3,21 @@ const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
+const webpack=require('webpack')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
+
+/**
+ * Plugins for webpack configuration.
+ */
+
+const plugins=[
+ new webpack.DefinePlugin({
+        __QSID__: JSON.stringify(config.qsid)
+    }),
+]
 
 {{#lint}}const createLintingRule = () => ({
   test: /\.(js|vue)$/,
@@ -25,7 +36,7 @@ module.exports = {
     app: './src/main.js'
   },
   output: {
-    path: config.build.assetsRoot,
+    path: path.join(config.build.assetsRoot,`${config.qsid}`) ,
     filename: '[name].js',
     publicPath: process.env.NODE_ENV === 'production'
       ? config.build.assetsPublicPath
@@ -38,6 +49,8 @@ module.exports = {
       'vue$': 'vue/dist/vue.esm.js',
       {{/if_eq}}
       '@': resolve('src'),
+      'Swork@': resolve(`src/pages/works${config.qsid}`),
+      'Style@': resolve(`src/static/style${config.qsid}`)
     }
   },
   module: {
@@ -60,7 +73,7 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: utils.assetsPath('img/[name].[hash:7].[ext]')
+          name: utils.assetsPath('images/[name].[hash:7].[ext]')
         }
       },
       {
@@ -92,5 +105,6 @@ module.exports = {
     net: 'empty',
     tls: 'empty',
     child_process: 'empty'
-  }
+  },
+  plugins:plugins
 }
