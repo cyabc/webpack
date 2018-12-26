@@ -32,9 +32,7 @@ const plugins=[
 
 module.exports = {
   context: path.resolve(__dirname, '../'),
-  entry: {
-    app: './src/main.js'
-  },
+  entry: utils.entries(),
   output: {
     path: path.join(config.build.assetsRoot,`${config.qsid}`) ,
     filename: '[name].js',
