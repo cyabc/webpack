@@ -100,22 +100,22 @@ exports.createNotifierCallback = () => {
   }
 }
 
-// globÊÇwebpack°²×°Ê±ÒÀÀµµÄÒ»¸öµÚÈı·½Ä£¿é£¬»¹Ä£¿éÔÊĞíÄãÊ¹ÓÃ *µÈ·ûºÅ, ÀıÈçlib/*.js¾ÍÊÇ»ñÈ¡libÎÄ¼ş¼ĞÏÂµÄËùÓĞjsºó×ºÃûµÄÎÄ¼ş
+// globæ˜¯webpackå®‰è£…æ—¶ä¾èµ–çš„ä¸€ä¸ªç¬¬ä¸‰æ–¹æ¨¡å—ï¼Œè¿˜æ¨¡å—å…è®¸ä½ ä½¿ç”¨ *ç­‰ç¬¦å·, ä¾‹å¦‚lib/*.jså°±æ˜¯è·å–libæ–‡ä»¶å¤¹ä¸‹çš„æ‰€æœ‰jsåç¼€åçš„æ–‡ä»¶
 
 const glob = require('glob');
 
-//Ò³ÃæÄ£°å
+//é¡µé¢æ¨¡æ¿
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-// È¡µÃÏàÓ¦µÄÒ³ÃæÂ·¾¶£¬ÒòÎªÖ®Ç°µÄÅäÖÃ£¬ËùÒÔÊÇsrcÎÄ¼ş¼ĞÏÂµÄpagesÎÄ¼ş¼Ğ
+// å–å¾—ç›¸åº”çš„é¡µé¢è·¯å¾„ï¼Œå› ä¸ºä¹‹å‰çš„é…ç½®ï¼Œæ‰€ä»¥æ˜¯srcæ–‡ä»¶å¤¹ä¸‹çš„pagesæ–‡ä»¶å¤¹
 
-const PAGE_PATH = path.resolve(__dirname, '../src/pages')
-//ÓÃÓÚ×öÏàÓ¦µÄmerge´¦Àí
+const PAGE_PATH = path.resolve(__dirname, '../src/pages/main')
+//ç”¨äºåšç›¸åº”çš„mergeå¤„ç†
 const merge = require('webpack-merge');
 
-//¶àÈë¿ÚÅäÖÃ
-// Í¨¹ıglobÄ£¿é¶ÁÈ¡pagesÎÄ¼ş¼ĞÏÂµÄËùÓĞ¶ÔÓ¦ÎÄ¼ş¼ĞÏÂµÄjsºó×ºÎÄ¼ş£¬Èç¹û¸ÃÎÄ¼ş´æÔÚ
-// ÄÇÃ´¾Í×÷ÎªÈë¿Ú´¦Àí
+//å¤šå…¥å£é…ç½®
+// é€šè¿‡globæ¨¡å—è¯»å–pagesæ–‡ä»¶å¤¹ä¸‹çš„æ‰€æœ‰å¯¹åº”æ–‡ä»¶å¤¹ä¸‹çš„jsåç¼€æ–‡ä»¶ï¼Œå¦‚æœè¯¥æ–‡ä»¶å­˜åœ¨
+// é‚£ä¹ˆå°±ä½œä¸ºå…¥å£å¤„ç†
 
 exports.entries = function() {
   // body...
@@ -132,8 +132,8 @@ exports.entries = function() {
   return map;
 }
 
-//¶àÒ³ÃæÊä³öÅäÖÃ
-// ÓëÉÏÃæµÄ¶àÒ³ÃæÈë¿ÚÅäÖÃÏàÍ¬£¬¶ÁÈ¡pagesÎÄ¼ş¼ĞÏÂµÄ¶ÔÓ¦µÄhtmlºó×ºÎÄ¼ş£¬È»ºó·ÅÈëÊı×éÖĞ
+//å¤šé¡µé¢è¾“å‡ºé…ç½®
+// ä¸ä¸Šé¢çš„å¤šé¡µé¢å…¥å£é…ç½®ç›¸åŒï¼Œè¯»å–pagesæ–‡ä»¶å¤¹ä¸‹çš„å¯¹åº”çš„htmlåç¼€æ–‡ä»¶ï¼Œç„¶åæ”¾å…¥æ•°ç»„ä¸­
 
 exports.htmlPlugin = function() {
   // body...
@@ -145,10 +145,10 @@ exports.htmlPlugin = function() {
     let currentpath = pathArr[pathArr.length - 2];
     // filename = currentpath+'.'+ filename;
     let conf = {
-      //Ä£°åÀ´Ô´
+      //æ¨¡æ¿æ¥æº
       template: filePath,
       filename: filename + '.html',
-      // Ò³ÃæÄ£°åĞèÒª¼Ó¶ÔÓ¦µÄjs½Å±¾£¬Èç¹û²»¼ÓÕâĞĞÔòÃ¿¸öÒ³Ãæ¶¼»áÒıÈëËùÓĞµÄjs½Å±¾
+      // é¡µé¢æ¨¡æ¿éœ€è¦åŠ å¯¹åº”çš„jsè„šæœ¬ï¼Œå¦‚æœä¸åŠ è¿™è¡Œåˆ™æ¯ä¸ªé¡µé¢éƒ½ä¼šå¼•å…¥æ‰€æœ‰çš„jsè„šæœ¬
       chunks: ['manifest', 'vendor', filename],
       inject: true
     }
