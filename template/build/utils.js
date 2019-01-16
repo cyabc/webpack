@@ -100,6 +100,24 @@ exports.createNotifierCallback = () => {
   }
 }
 
+const isWin = /^win/.test(process.platform);
+
+// Wraping the entry file for web.
+const getWebEntryFileContent = (entryPath, vueFilePath) => {
+  let relativeVuePath = path.relative(path.join(entryPath, '../'), vueFilePath);
+  let relativeEntryPath = path.join(config.ROOT,'src',config.entryFilePath);
+
+  let entryContents = fs.readFileSync(relativeEntryPath).toString();
+  if (isWin) {
+      relativeVuePath = relativeVuePath.replace(/\\/g, '\\\\');
+  }
+ 
+  return entryContents;
+}
+
+
+const fs = require('fs-extra');
+const vueWebTemp =  path.join(config.ROOT, config.templateDir);
 // glob是webpack安装时依赖的一个第三方模块，还模块允许你使用 *等符号, 例如lib/*.js就是获取lib文件夹下的所有js后缀名的文件
 
 const glob = require('glob');
@@ -109,7 +127,10 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 // 取得相应的页面路径，因为之前的配置，所以是src文件夹下的pages文件夹
 
-const PAGE_PATH = path.resolve(__dirname, '../src/pages/main')
+// const PAGE_PATH = path.resolve(__dirname, '../src/pages/main')
+
+const entryFiles = glob.sync(`${config.sourceDir}/${config.entryFilter}`, config.entryFilterOptions);
+
 //用于做相应的merge处理
 const merge = require('webpack-merge');
 
@@ -119,15 +140,23 @@ const merge = require('webpack-merge');
 
 exports.entries = function() {
   // body...
-  let entryFiles = glob.sync(PAGE_PATH + '/*/*.js');
+  // let entryFiles = glob.sync(PAGE_PATH + '/*/*.js');
 
 
   let map = {};
   entryFiles.forEach((filePath) => {
-    let filename = filePath.substring(filePath.lastIndexOf('\/') + 1, filePath.lastIndexOf('.'));
-    let pathArr = filePath.split('\/');
-    // let currentpath = pathArr[pathArr.length-2];
-    map[filename] = filePath;
+
+    const extname = path.extname(entry);
+    const basename = entry.replace(`${config.sourceDir}/`, '').replace(extname, '');
+    const templatePathForWeb = path.join(vueWebTemp, basename + '.web.js');
+    fs.outputFileSync(templatePathForWeb, getWebEntryFileContent(templatePathForWeb, entry));
+    map[basename] = templatePathForWeb;
+
+
+    // let filename = filePath.substring(filePath.lastIndexOf('\/') + 1, filePath.lastIndexOf('.'));
+    // let pathArr = filePath.split('\/');
+    // // let currentpath = pathArr[pathArr.length-2];
+    // map[filename] = filePath;
   });
   return map;
 }
@@ -137,17 +166,20 @@ exports.entries = function() {
 
 exports.htmlPlugin = function() {
   // body...
-  let entryHtml = glob.sync(PAGE_PATH + '/*/*.html');
+  // let entryHtml = glob.sync(PAGE_PATH + '/*/*.html');
+  let entryHtml =entryFiles;
   let arr = [];
   entryHtml.forEach((filePath) => {
+    const extname = path.extname(entry);
+    const basename = entry.replace(`${config.sourceDir}/`, '').replace(extname, '');
     let filename = filePath.substring(filePath.lastIndexOf('\/') + 1, filePath.lastIndexOf('.'))
     let pathArr = filePath.split('\/');
     let currentpath = pathArr[pathArr.length - 2];
     // filename = currentpath+'.'+ filename;
     let conf = {
       //模板来源
-      template: filePath,
-      filename: filename + '.html',
+      template: config.ROOT+'index.html',
+      filename: basename + '.html',
       // 页面模板需要加对应的js脚本，如果不加这行则每个页面都会引入所有的js脚本
       chunks: ['manifest', 'vendor', filename],
       inject: true

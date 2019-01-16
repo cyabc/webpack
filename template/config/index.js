@@ -3,12 +3,24 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 
 const path = require('path')
+const ROOT = path.resolve(__dirname, '..');
 const ip = 'localhost';
 const qsid = '999' //通达信 999 其他券商查看相应券商列表文档
 
 module.exports = {
+  qsid: qsid,
+  root: ROOT,
+  // 指定编译目录，避免全部编译拖慢编译速度
+  sourceDir: 'src/pages/main/',
+  templateDir: '.temp',
+  entryFilePath: 'main.js',
+  //入口文件过滤
+  // entryFilter: '**/*.vue',
+  entryFilter: 'credit/*.vue',
+  // Options for the filter
+  // see: https://www.npmjs.com/package/glob#options
+  entryFilterOptions: {},
   dev: {
-    qsid: qsid,
     // Paths
     assetsSubDirectory: '',
     assetsPublicPath: './',
@@ -17,7 +29,7 @@ module.exports = {
     // Various Dev Server settings
     host: ip, // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
-    autoOpenBrowser: false,
+    autoOpenBrowser: true,
     errorOverlay: true,
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
@@ -46,7 +58,6 @@ module.exports = {
   },
 
   build: {
-    qsid: qsid,
     // Template for index.html
     index: path.resolve(__dirname, '../dist/index.html'),
 

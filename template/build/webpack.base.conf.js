@@ -34,7 +34,7 @@ module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: utils.entries(),
   output: {
-    path: path.join(config.build.assetsRoot,`${config.qsid}`) ,
+    path: path.join(config.ROOT,`./dist/web${config.qsid}`) ,
     filename: '[name].js',
     publicPath: process.env.NODE_ENV === 'production'
       ? config.build.assetsPublicPath
