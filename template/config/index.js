@@ -33,6 +33,17 @@ module.exports = {
     errorOverlay: true,
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
+    contentBase: ROOT,
+    historyApiFallback: true,
+    open: true,
+    watchContentBase: true,  
+    watchOptions: {
+      ignored: /node_modules/,
+      aggregateTimeout: 300,
+      poll: false
+    },
+    
+    
     {{#lint}} // Use Eslint Loader?
     // If true, your code will be linted during bundling and
     // linting errors and warnings will be shown in the console.
