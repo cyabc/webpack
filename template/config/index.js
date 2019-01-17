@@ -11,12 +11,12 @@ module.exports = {
   qsid: qsid,
   root: ROOT,
   // 指定编译目录，避免全部编译拖慢编译速度
-  sourceDir: 'src/pages/main/',
+  sourceDir: 'src/pages/main',
   templateDir: '.temp',
   entryFilePath: 'main.js',
   //入口文件过滤
   // entryFilter: '**/*.vue',
-  entryFilter: 'credit/*.vue',
+  entryFilter: '**/*.vue',
   // Options for the filter
   // see: https://www.npmjs.com/package/glob#options
   entryFilterOptions: {},

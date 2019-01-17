@@ -1,32 +1,17 @@
 <template>
-  <div>
   <div >
-    测试1
+    测试4
   </div>
-  <div>
-    {{a}}
-  </div>
-  <div>
-    {{b}}
-  </div>
-  <div>
-    {{c}}
-  </div>
-</div>
 </template>
 
 <script>
 
 export default {
-  name: 'dbpmr',
-  data(){
-    return {
-      a:1,
-      b:2,
-      c:3
-    }
+  name: 'App',
+  components: {
+
   }
-}
+} 
 </script>
 
 <style>

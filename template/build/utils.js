@@ -4,13 +4,7 @@ const config = require('../config')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const packageConfig = require('../package.json')
 
-exports.assetsPath = function (_path) {
-  const assetsSubDirectory = process.env.NODE_ENV === 'production'
-    ? config.build.assetsSubDirectory
-    : config.dev.assetsSubDirectory
 
-  return path.posix.join(assetsSubDirectory, _path)
-}
 
 exports.cssLoaders = function (options) {
   options = options || {}
@@ -95,7 +89,7 @@ exports.createNotifierCallback = () => {
       title: packageConfig.name,
       message: severity + ': ' + error.name,
       subtitle: filename || '',
-      icon: path.join(__dirname, 'logo.png')
+      icon: path.join(__dirname, '')
     })
   }
 }
@@ -105,19 +99,24 @@ const isWin = /^win/.test(process.platform);
 // Wraping the entry file for web.
 const getWebEntryFileContent = (entryPath, vueFilePath) => {
   let relativeVuePath = path.relative(path.join(entryPath, '../'), vueFilePath);
-  let relativeEntryPath = path.join(config.ROOT,'src',config.entryFilePath);
-
+  let relativeEntryPath = path.join(config.root,'src',config.entryFilePath);
+  let contents = '';
   let entryContents = fs.readFileSync(relativeEntryPath).toString();
   if (isWin) {
       relativeVuePath = relativeVuePath.replace(/\\/g, '\\\\');
   }
+
+    contents += `
+import App from '${relativeVuePath}';
+`;
+// new Vue(Vue.util.extend({el: '#root'}, App));
  
-  return entryContents;
+  return contents+entryContents;
 }
 
 
 const fs = require('fs-extra');
-const vueWebTemp =  path.join(config.ROOT, config.templateDir);
+const vueWebTemp =  path.join(config.root, config.templateDir);
 // glob是webpack安装时依赖的一个第三方模块，还模块允许你使用 *等符号, 例如lib/*.js就是获取lib文件夹下的所有js后缀名的文件
 
 const glob = require('glob');
@@ -146,17 +145,17 @@ exports.entries = function() {
   let map = {};
   entryFiles.forEach((filePath) => {
 
-    const extname = path.extname(entry);
-    const basename = entry.replace(`${config.sourceDir}/`, '').replace(extname, '');
-    const templatePathForWeb = path.join(vueWebTemp, basename + '.web.js');
-    fs.outputFileSync(templatePathForWeb, getWebEntryFileContent(templatePathForWeb, entry));
+    const extname = path.extname(filePath);
+    console.log('filePath:',filePath)
+    console.log('config.sourceDir:',config.sourceDir)
+    let basename = filePath.replace(`${config.sourceDir}/`, '').replace(extname, '');
+    console.log('basename:',basename)
+    let templatePathForWeb = path.join(vueWebTemp, basename + '.web.js');
+    fs.outputFileSync(templatePathForWeb, getWebEntryFileContent(templatePathForWeb, filePath));
     map[basename] = templatePathForWeb;
 
 
-    // let filename = filePath.substring(filePath.lastIndexOf('\/') + 1, filePath.lastIndexOf('.'));
-    // let pathArr = filePath.split('\/');
-    // // let currentpath = pathArr[pathArr.length-2];
-    // map[filename] = filePath;
+
   });
   return map;
 }
@@ -170,18 +169,15 @@ exports.htmlPlugin = function() {
   let entryHtml =entryFiles;
   let arr = [];
   entryHtml.forEach((filePath) => {
-    const extname = path.extname(entry);
-    const basename = entry.replace(`${config.sourceDir}/`, '').replace(extname, '');
-    let filename = filePath.substring(filePath.lastIndexOf('\/') + 1, filePath.lastIndexOf('.'))
-    let pathArr = filePath.split('\/');
-    let currentpath = pathArr[pathArr.length - 2];
-    // filename = currentpath+'.'+ filename;
+    let extname = path.extname(filePath);
+    let basename = filePath.replace(`${config.sourceDir}/`, '').replace(extname, '');
+
     let conf = {
       //模板来源
-      template: config.ROOT+'index.html',
+      template: config.root+'/index.html',
       filename: basename + '.html',
       // 页面模板需要加对应的js脚本，如果不加这行则每个页面都会引入所有的js脚本
-      chunks: ['manifest', 'vendor', filename],
+      chunks: ['manifest', 'vendor', basename],
       inject: true
     }
 
