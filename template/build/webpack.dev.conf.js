@@ -28,22 +28,25 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     //     { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html') },
     //   ],
     // },
-    hot: true,
+    // inline:true,
+    // historyApiFallback:config.dev.historyApiFallback,
+    // hot: true,
     contentBase: config.dev.contentBase, // since we use CopyWebpackPlugin.
+    watchContentBase: config.dev.watchContentBase,
     compress: true,
-    host: HOST || config.dev.host,
-    port: PORT || config.dev.port,
+    host:config.dev.host,
+    port:config.dev.port,
     open: config.dev.autoOpenBrowser,
-    openPage: 'dist/',
+    openPage: `dist/web${config.qsid}/`,
     overlay: config.dev.errorOverlay
       ? { warnings: false, errors: true }
       : false,
-    publicPath: config.dev.assetsPublicPath,
+    // publicPath: config.dev.assetsPublicPath,
     proxy: config.dev.proxyTable,
     quiet: true, // necessary for FriendlyErrorsPlugin
-    watchOptions: {
-      poll: config.dev.poll,
-    }
+    watchOptions: config.dev.watchOptions
+
+
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -92,5 +95,44 @@ module.exports = new Promise((resolve, reject) => {
 
       resolve(devWebpackConfig)
     }
+  })
+})
+
+
+require('./check-versions')()
+
+process.env.NODE_ENV = 'production'
+
+const ora = require('ora')
+const rm = require('rimraf')
+const chalk = require('chalk')
+const webpackConfig = require('./webpack.prod.conf')
+
+const spinner = ora('building for production...')
+spinner.start()
+
+rm(path.join(config.root, '/dist'), err => {
+  if (err) throw err
+  webpack(webpackConfig, (err, stats) => {
+    spinner.stop()
+    if (err) throw err
+    process.stdout.write(stats.toString({
+      colors: true,
+      modules: false,
+      children: false, // If you are using ts-loader, setting this to true will make TypeScript errors show up during build.
+      chunks: false,
+      chunkModules: false
+    }) + '\n\n')
+
+    if (stats.hasErrors()) {
+      console.log(chalk.red('  Build failed with errors.\n'))
+      process.exit(1)
+    }
+
+    console.log(chalk.cyan('  Build complete.\n'))
+    console.log(chalk.yellow(
+      '  Tip: built files are meant to be served over an HTTP server.\n' +
+      '  Opening index.html over file:// won\'t work.\n'
+    ))
   })
 })

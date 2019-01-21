@@ -146,10 +146,7 @@ exports.entries = function() {
   entryFiles.forEach((filePath) => {
 
     const extname = path.extname(filePath);
-    console.log('filePath:',filePath)
-    console.log('config.sourceDir:',config.sourceDir)
     let basename = filePath.replace(`${config.sourceDir}/`, '').replace(extname, '');
-    console.log('basename:',basename)
     let templatePathForWeb = path.join(vueWebTemp, basename + '.web.js');
     fs.outputFileSync(templatePathForWeb, getWebEntryFileContent(templatePathForWeb, filePath));
     map[basename] = templatePathForWeb;
