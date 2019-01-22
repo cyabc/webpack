@@ -7,7 +7,7 @@
 <script>
 /**
 import configMixin from '@/config/config-mixin.js';
-import sendDataMixin from 'Swork@/stock/mob_send_drwt.js';
+import sendDataMixin from 'Swork@/credit/mob_send_dbpmr.js';
 import simpleQueryMixin from '@/components/simple-query-mixin.js'
 import confirmCom from '@/components/jy-confirm';
 export default {
