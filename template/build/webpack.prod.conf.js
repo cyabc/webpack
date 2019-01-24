@@ -16,6 +16,7 @@ const env = {{#if_or unit e2e}}process.env.NODE_ENV === 'testing'
   : {{/if_or}}require('../config/prod.env')
 
 const webpackConfig = merge(baseWebpackConfig, {
+  watch:true,
   module: {
     rules: utils.styleLoaders({
       sourceMap: config.build.productionSourceMap,
@@ -82,7 +83,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     // split vendor js into its own file
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
-      filename:'/tdx-vendors/vendor.web.js',
+      filename:'tdx-vendors/vendor.web.js',
       minChunks (module) {
         // any required modules inside node_modules are extracted to vendor
         return (
@@ -98,7 +99,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     // prevent vendor hash from being updated whenever app bundle is updated
     new webpack.optimize.CommonsChunkPlugin({
       name: 'manifest',
-      filename:'/tdx-vendors/manifest.web.js',
+      filename:'tdx-vendors/manifest.web.js',
       minChunks: Infinity
     }),
     // This instance extracts shared chunks from code splitted chunks and bundles them
