@@ -25,6 +25,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "jquery": "^1.11.0",
     "vue": "^2.5.2"{{#router}},
     "vue-router": "^3.0.1"{{/router}}{{#vuex}},
     "vuex": "^2.1.1"{{/vuex}}
@@ -95,6 +96,7 @@
     "chalk": "^2.0.1",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.0",
+    "es6-promise": "^4.2.5",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^1.1.4",
     "friendly-errors-webpack-plugin": "^1.6.1",

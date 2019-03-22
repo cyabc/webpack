@@ -10,8 +10,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
 
-const HOST = process.env.HOST
-const PORT = process.env.PORT && Number(process.env.PORT)
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
@@ -43,7 +41,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       : false,
     // publicPath: config.dev.assetsPublicPath,
     proxy: config.dev.proxyTable,
-    quiet: true, // necessary for FriendlyErrorsPlugin
+    quiet: false, // necessary for FriendlyErrorsPlugin
     watchOptions: config.dev.watchOptions
 
 
@@ -55,12 +53,6 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
     new webpack.NoEmitOnErrorsPlugin(),
-    // https://github.com/ampedandwired/html-webpack-plugin
-    // new HtmlWebpackPlugin({
-    //   filename: 'index.html',
-    //   template: 'index.html',
-    //   inject: true
-    // }),
     // copy custom static assets
     new CopyWebpackPlugin([
       {
@@ -98,44 +90,37 @@ module.exports = new Promise((resolve, reject) => {
   })
 })
 
-
-require('./check-versions')()
-
-process.env.NODE_ENV = 'production'
-
 const ora = require('ora')
-const rm = require('rimraf')
 const chalk = require('chalk')
 const webpackConfig = require('./webpack.prod.conf')
+/**
+ * Webpack configuration for dev.
+ */
 
+
+// build source to vue_bundle with watch mode.
 const spinner = ora('building for production...')
 spinner.start()
 
-rm(path.join(config.root, '/dist'), err => {
+webpack(webpackConfig, (err, stats) => {
+  spinner.stop()
   if (err) throw err
-  webpack(webpackConfig, (err, stats) => {
-    if (err) {
-    console.err('COMPILE ERROR:', err.stack)
-    }
-    // spinner.stop()
-    // if (err) throw err
-    // process.stdout.write(stats.toString({
-    //   colors: true,
-    //   modules: false,
-    //   children: false, // If you are using ts-loader, setting this to true will make TypeScript errors show up during build.
-    //   chunks: false,
-    //   chunkModules: false
-    // }) + '\n\n')
+  process.stdout.write(stats.toString({
+    colors: true,
+    modules: false,
+    children: false, // If you are using ts-loader, setting this to true will make TypeScript errors show up during build.
+    chunks: false,
+    chunkModules: false
+  }) + '\n\n')
 
-    // if (stats.hasErrors()) {
-    //   console.log(chalk.red('  Build failed with errors.\n'))
-    //   process.exit(1)
-    // }
+  if (stats.hasErrors()) {
+    console.log(chalk.red('  Build failed with errors.\n'))
+    process.exit(1)
+  }
 
-    // console.log(chalk.cyan('  Build complete.\n'))
-    // console.log(chalk.yellow(
-    //   '  Tip: built files are meant to be served over an HTTP server.\n' +
-    //   '  Opening index.html over file:// won\'t work.\n'
-    // ))
-  })
+  console.log(chalk.cyan('  Build complete.\n'))
+  console.log(chalk.yellow(
+    '  Tip: built files are meant to be served over an HTTP server.\n' +
+    '  Opening index.html over file:// won\'t work.\n'
+  ))
 })
