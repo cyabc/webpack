@@ -1,0 +1,12 @@
+{
+    "useConfigFiles": false,
+    "packageManager": "npm",
+    "useTaobaoRegistry": false,
+    "cssPreprocessor": "SASS",
+    "router": false,
+    "vuex": false,
+    "routerHistoryMode": false,
+    "plugins": {
+
+    }
+  }
